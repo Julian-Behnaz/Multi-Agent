@@ -1,6 +1,6 @@
 type Brand<K, T> = K & { __brand: T }
 
-export type t = Brand<number, 'RGBA32'>;
+export type t = number;
 
 export function toString(v: t) {
     return `#${(v >>> 0).toString(16).padStart(8, '0')}`;

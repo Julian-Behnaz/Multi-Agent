@@ -71,3 +71,7 @@ export function getCircleIntersection(p0: V2.t, r0: number, p1: V2.t, r1: number
     const p3Y = p2Y - h * (p1[0]-p0[0])/d;
     return V2.fromValues(p3X, p3Y);
 }
+
+export function randomFloat(min: number, max: number): number {
+    return lerp(min, max, Math.random());
+}

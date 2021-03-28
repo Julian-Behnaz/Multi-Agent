@@ -545,7 +545,7 @@ export class D2D {
         this.byteView = new DataView(newBackingMem);
     }
 
-    private ensureSpaceFor(used: number, nBytes: number) {
+    private _ensureSpaceFor(used: number, nBytes: number) {
         while (used + nBytes > this.backingMem.byteLength) {
             this.doubleMem();
         }
@@ -553,7 +553,7 @@ export class D2D {
 
     translate(x: number, y: number) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 9); // 1 + 4 + 4
+        this._ensureSpaceFor(i, 9); // 1 + 4 + 4
         this.byteView.setUint8(i, kCmd.Translate); i += 1;
         this.byteView.setFloat32(i, x); i += 4;
         this.byteView.setFloat32(i, y); i += 4;
@@ -565,7 +565,7 @@ export class D2D {
 
     setFillColor(c: Color.t) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 5); // 1 + 4
+        this._ensureSpaceFor(i, 5); // 1 + 4
         this.byteView.setUint8(i, kCmd.SetFillColor); i += 1;
         this.byteView.setUint32(i, c); i += 4;
         this.usedBytes = i;
@@ -573,7 +573,7 @@ export class D2D {
 
     setStrokeColor(c: Color.t) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 5); // 1 + 4
+        this._ensureSpaceFor(i, 5); // 1 + 4
         this.byteView.setUint8(i, kCmd.SetStrokeColor); i += 1;
         this.byteView.setUint32(i, c); i += 4;
         this.usedBytes = i;
@@ -581,7 +581,7 @@ export class D2D {
 
     setStrokeThickness(width: number) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 5); // 1 + 4
+        this._ensureSpaceFor(i, 5); // 1 + 4
         this.byteView.setUint8(i, kCmd.SetStrokeThickness); i += 1;
         this.byteView.setFloat32(i, width); i += 4;
         this.usedBytes = i;
@@ -590,7 +590,7 @@ export class D2D {
     private _lastSetFontStyle: FontStyle.t | null = null;
     setFont(fontStyle: FontStyle.t) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 5);
+        this._ensureSpaceFor(i, 5);
 
         const styleHandle = this.parameterStash.push(fontStyle) - 1;
 
@@ -614,7 +614,7 @@ export class D2D {
 
     fillText(x: number, y: number, str: string) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 13); // 1 + 4 + 4 + 4
+        this._ensureSpaceFor(i, 13); // 1 + 4 + 4 + 4
         const strHandle = this.parameterStash.push(str) - 1;
 
         this.byteView.setUint8(i, kCmd.FillText); i += 1;
@@ -626,35 +626,35 @@ export class D2D {
 
     beginPath() {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 1);
+        this._ensureSpaceFor(i, 1);
         this.byteView.setUint8(i, kCmd.BeginPath);  i += 1
         this.usedBytes = i;
     }
 
     closePath() {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 1);
+        this._ensureSpaceFor(i, 1);
         this.byteView.setUint8(i, kCmd.ClosePath);  i += 1
         this.usedBytes = i;
     }
 
     fill() {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 1);
+        this._ensureSpaceFor(i, 1);
         this.byteView.setUint8(i, kCmd.Fill);  i += 1
         this.usedBytes = i;
     }
 
     stroke() {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 1);
+        this._ensureSpaceFor(i, 1);
         this.byteView.setUint8(i, kCmd.Stroke);  i += 1
         this.usedBytes = i;
     }
 
     moveTo(x: number, y: number) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 9);
+        this._ensureSpaceFor(i, 9);
         this.byteView.setUint8(i, kCmd.MoveTo); i += 1
         this.byteView.setFloat32(i, x); i += 4;
         this.byteView.setFloat32(i, y); i += 4;
@@ -663,7 +663,7 @@ export class D2D {
 
     lineTo(x: number, y: number) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 9);
+        this._ensureSpaceFor(i, 9);
         this.byteView.setUint8(i, kCmd.LineTo); i += 1
         this.byteView.setFloat32(i, x); i += 4;
         this.byteView.setFloat32(i, y); i += 4;
@@ -672,7 +672,7 @@ export class D2D {
 
     arcTo(x1: number, y1: number, x2: number, y2: number, radius: number) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 21);
+        this._ensureSpaceFor(i, 21);
         this.byteView.setUint8(i, kCmd.ArcTo); i += 1
         this.byteView.setFloat32(i, x1); i += 4;
         this.byteView.setFloat32(i, y1); i += 4;
@@ -684,7 +684,7 @@ export class D2D {
 
     _rect(x: number, y: number, w: number, h: number) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 17);
+        this._ensureSpaceFor(i, 17);
         this.byteView.setUint8(i, kCmd.Rect); i += 1
         this.byteView.setFloat32(i, x); i += 4;
         this.byteView.setFloat32(i, y); i += 4;
@@ -695,7 +695,7 @@ export class D2D {
 
     _ellipse(x: number, y: number, radiusX: number, radiusY: number, rotation: number, startAngle: number, endAngle: number) {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 29);
+        this._ensureSpaceFor(i, 29);
         this.byteView.setUint8(i, kCmd.Ellipse); i += 1
         this.byteView.setFloat32(i, x); i += 4;
         this.byteView.setFloat32(i, y); i += 4;
@@ -804,7 +804,7 @@ export class D2D {
 
     clearScreen(): void {
         let i = this.usedBytes;
-        this.ensureSpaceFor(i, 1);
+        this._ensureSpaceFor(i, 1);
         this.byteView.setUint8(i, kCmd.ClearScreen); i += 1
         this.usedBytes = i;
     }

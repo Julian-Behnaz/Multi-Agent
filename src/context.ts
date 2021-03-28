@@ -11,6 +11,8 @@ export class Context {
     readonly D2D: D2D
     readonly W2D: W2D
     readonly UI: UI
+    public elapsed: number = 0
+    public lastElapsed: number = 0
     public dt: number = 0
 
     constructor() {
@@ -41,8 +43,10 @@ export class Context {
         creature: 0xb598a3FF as Color.t
     }
 
-    onFrameStart(dt: number) {
-        this.dt = dt;
+    onFrameStart(elapsed: number) {
+        this.elapsed = elapsed;
+        this.dt = this.elapsed - this.lastElapsed;
+        this.lastElapsed = this.elapsed;
         this.D2D.resetBuffer();
         this.rendererCanvas.autoresize();
         this.rendererGL.autoresize();
@@ -57,7 +61,7 @@ export class Context {
 
     render() {
         this.rendererCanvas.render(this.D2D);
-        this.rendererGL.render(this.D2DGPU);
+        // this.rendererGL.render(this.D2DGPU);
     }
 }
 
